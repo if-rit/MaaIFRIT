@@ -226,8 +226,8 @@
     <system:String x:Key="StartingSquad">開局分隊</system:String>
     <system:String x:Key="StartingRoles">開局職業組</system:String>
     <system:String x:Key="StartingCoreChar">開局{key=Operator}</system:String>
-    <system:String x:Key="StartingCoreChar2">第二{key=Operator}</system:String>
-    <system:String x:Key="StartingCoreChar3">第三{key=Operator}</system:String>
+    <system:String x:Key="StartingCoreChar2">第二{key=Operator}（可選）</system:String>
+    <system:String x:Key="StartingCoreChar3">第三{key=Operator}（可選）</system:String>
     <system:String x:Key="StartingCoreCharTip">不填寫則使用預設策略。</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">輸入的{key=Operator}未在戰鬥數據 (battle_data) 中。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">凹 ｢{key=StartingCoreChar}｣ 直升精二</system:String>
