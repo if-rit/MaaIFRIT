@@ -105,6 +105,16 @@ public class AsstRoguelikeTask : AsstBaseTask
     public string CoreChar { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets 第 2 个开局干员名
+    /// </summary>
+    public string CoreChar2 { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets 第 3 个开局干员名
+    /// </summary>
+    public string CoreChar3 { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets a value indicating whether 是否凹开局直升
     /// </summary>
     public bool StartWithEliteTwo { get; set; }
@@ -148,6 +158,16 @@ public class AsstRoguelikeTask : AsstBaseTask
     /// Gets or sets a value indicating whether 是否core_char使用好友助战
     /// </summary>
     public bool UseSupport { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether 第 2 个开局干员使用好友助战
+    /// </summary>
+    public bool UseSupport2 { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether 第 3 个开局干员使用好友助战
+    /// </summary>
+    public bool UseSupport3 { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether 是否允许使用非好友助战
@@ -232,6 +252,16 @@ public class AsstRoguelikeTask : AsstBaseTask
             taskParams["core_char"] = CoreChar;
         }
 
+        if (CoreChar2.Length > 0)
+        {
+            taskParams["core_char_2"] = CoreChar2;
+        }
+
+        if (CoreChar3.Length > 0)
+        {
+            taskParams["core_char_3"] = CoreChar3;
+        }
+
         if (Mode == RoguelikeMode.Exp)
         {
             taskParams["stop_at_final_boss"] = StopAtFinalBoss;
@@ -279,6 +309,8 @@ public class AsstRoguelikeTask : AsstBaseTask
         }
 
         taskParams["use_support"] = UseSupport;
+        taskParams["use_support_2"] = UseSupport2;
+        taskParams["use_support_3"] = UseSupport3;
         taskParams["use_nonfriend_support"] = UseSupportNonFriend;
         taskParams["refresh_trader_with_dice"] = Theme == RoguelikeTheme.Mizuki && RefreshTraderWithDice;
         if (!string.IsNullOrEmpty(StartWithSeed))

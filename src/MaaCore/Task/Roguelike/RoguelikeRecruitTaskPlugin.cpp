@@ -75,6 +75,7 @@ bool asst::RoguelikeRecruitTaskPlugin::_run()
     LogTraceFunction;
 
     ++m_recruit_count;
+    m_config->status().recruit_count = m_recruit_count; // 供 RoguelikeCustomStartTaskPlugin 判断当前招募槽位
 
     auto& theme = m_config->get_theme();
     auto mode = m_config->get_mode();
@@ -126,19 +127,24 @@ bool asst::RoguelikeRecruitTaskPlugin::_run()
         }
     }
 
-    if (m_initail_recruit && m_recruit_count == 1) {
-        if (m_config->get_use_support()) { // 是否使用助战干员开局
-            if (recruit_support_char()) {
+    if (m_initail_recruit && m_recruit_count <= 3) {
+        const std::string& core_char = m_config->get_core_char_slot(m_recruit_count);
+        if (!core_char.empty()) {
+            bool recruited = false;
+            if (m_config->get_use_support_slot(m_recruit_count)) { // 该槽位是否使用助战干员
+                const int max_refresh_times = Task.get("RoguelikeRefreshSupportBtnOcr")->special_params.front();
+                recruited = recruit_support_char(core_char, max_refresh_times);
+                // 助战干员招不到时回退自动招募（保持既有行为）
+            }
+            else {
+                recruited = recruit_own_char(core_char);
+            }
+            if (recruited) {
                 m_starts_complete = true;
                 return true;
             }
         }
-        else {
-            if (recruit_own_char()) {
-                m_starts_complete = true;
-                return true;
-            }
-        }
+        // 指定干员为空或招不到时，落入下方自动招募逻辑（保底）
     }
 
     bool team_full_without_rookie = m_config->status().team_full_without_rookie;
@@ -519,6 +525,7 @@ bool asst::RoguelikeRecruitTaskPlugin::_run()
 void asst::RoguelikeRecruitTaskPlugin::reset_in_run_variables()
 {
     m_recruit_count = 0;
+    m_config->status().recruit_count = 0;
     m_starts_complete = false;
     m_team_complete = false;
 }
@@ -622,20 +629,6 @@ bool asst::RoguelikeRecruitTaskPlugin::recruit_appointed_char(const std::string&
     return false;
 }
 
-bool asst::RoguelikeRecruitTaskPlugin::recruit_support_char()
-{
-    LogTraceFunction;
-    const int MaxRefreshTimes = Task.get("RoguelikeRefreshSupportBtnOcr")->special_params.front();
-
-    const auto& core_opt = m_config->get_core_char();
-    if (!core_opt.empty()) {
-        if (recruit_support_char(core_opt, MaxRefreshTimes)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 bool asst::RoguelikeRecruitTaskPlugin::recruit_support_char(const std::string& name, const int max_refresh)
 {
     LogTraceFunction;
@@ -724,15 +717,14 @@ bool asst::RoguelikeRecruitTaskPlugin::recruit_support_char(const std::string& n
     return true;
 }
 
-bool asst::RoguelikeRecruitTaskPlugin::recruit_own_char()
+bool asst::RoguelikeRecruitTaskPlugin::recruit_own_char(const std::string& name)
 {
     LogTraceFunction;
 
-    const auto& core_opt = m_config->get_core_char();
-    if (core_opt.empty()) {
+    if (name.empty()) {
         return false;
     }
-    return recruit_appointed_char(core_opt);
+    return recruit_appointed_char(name);
 }
 
 void asst::RoguelikeRecruitTaskPlugin::select_oper(const battle::roguelike::Recruitment& oper)

@@ -226,6 +226,8 @@
     <system:String x:Key="StartingSquad">开局分队</system:String>
     <system:String x:Key="StartingRoles">开局职业组</system:String>
     <system:String x:Key="StartingCoreChar">开局{key=Operator}</system:String>
+    <system:String x:Key="StartingCoreChar2">第二{key=Operator}</system:String>
+    <system:String x:Key="StartingCoreChar3">第三{key=Operator}</system:String>
     <system:String x:Key="StartingCoreCharTip">不填写则使用默认策略。</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">输入的{key=Operator}未在 battle_data 中。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">凹 ｢{key=StartingCoreChar}｣ 直升精二</system:String>
@@ -236,6 +238,8 @@
     <system:String x:Key="RoguelikeCollapseList">坍缩范式列表</system:String>
     <system:String x:Key="RoguelikeCollapseListTip">用英文分号 ｢;｣ 隔开，留空将使用默认列表。</system:String>
     <system:String x:Key="RoguelikeUseSupportUnit">｢{key=StartingCoreChar}｣ 使用助战</system:String>
+    <system:String x:Key="RoguelikeUseSupportUnit2">｢{key=StartingCoreChar2}｣ 使用助战</system:String>
+    <system:String x:Key="RoguelikeUseSupportUnit3">｢{key=StartingCoreChar3}｣ 使用助战</system:String>
     <system:String x:Key="RoguelikeRequireStartingCoreChar">需先填写 ｢{key=StartingCoreChar}｣</system:String>
     <system:String x:Key="RoguelikeUseNonFriendSupport">可以使用非好友助战</system:String>
     <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">自动肉鸽在战斗结束前延迟 ｢{key=Stop}｣ 动作</system:String>

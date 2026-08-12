@@ -26,11 +26,12 @@ bool asst::RoguelikeCustomStartTaskPlugin::verify(AsstMsg msg, const json::value
     if (task_view.starts_with(roguelike_name)) {
         task_view.remove_prefix(roguelike_name.length());
     }
-    static const std::array<std::tuple<AsstMsg, std::string_view, RoguelikeCustomType>, 4> TaskMap = {
+    static const std::array<std::tuple<AsstMsg, std::string_view, RoguelikeCustomType>, 5> TaskMap = {
         std::make_tuple(AsstMsg::SubTaskCompleted, "Roguelike@Squad-EnterPoint", RoguelikeCustomType::Squad),
         std::make_tuple(AsstMsg::SubTaskStart, "Roguelike@LastReward-EnterPoint", RoguelikeCustomType::Reward),
         std::make_tuple(AsstMsg::SubTaskCompleted, "Roguelike@RolesDefault", RoguelikeCustomType::Roles),
         std::make_tuple(AsstMsg::SubTaskStart, "Roguelike@RecruitMain", RoguelikeCustomType::CoreChar),
+        std::make_tuple(AsstMsg::SubTaskStart, "Roguelike@RecruitOther", RoguelikeCustomType::CoreChar),
     };
 
     m_waiting_to_run = RoguelikeCustomType::None;
@@ -55,7 +56,9 @@ bool asst::RoguelikeCustomStartTaskPlugin::verify(AsstMsg msg, const json::value
         return true;
     }
     if (m_waiting_to_run == RoguelikeCustomType::CoreChar) {
-        return !m_config->get_core_char().empty();
+        // 开局招募第 N 次时（N = status().recruit_count + 1）切换对应槽位的职业页签；
+        // 开局结束后（如局内招募）status().recruit_count >= 3，槽位越界返回空串，不处理
+        return !m_config->get_core_char_slot(m_config->status().recruit_count + 1).empty();
     }
 
     // Roles CoreChar
@@ -76,9 +79,13 @@ bool asst::RoguelikeCustomStartTaskPlugin::load_params(const json::value& params
         m_collectible_mode_squad = params.get("collectible_mode_squad", m_squad);
     }
 
-    m_config->set_core_char(params.get("core_char", ""));                            // 开局干员名
+    m_config->set_core_char(params.get("core_char", ""));                            // 第 1 个开局干员名
+    m_config->set_core_char_2(params.get("core_char_2", ""));                        // 第 2 个开局干员名
+    m_config->set_core_char_3(params.get("core_char_3", ""));                        // 第 3 个开局干员名
     set_custom(RoguelikeCustomType::Roles, params.get("roles", ""));                 // 开局职业组
-    m_config->set_use_support(params.get("use_support", false));                     // 开局干员是否为助战干员
+    m_config->set_use_support(params.get("use_support", false));                     // 第 1 个开局干员是否为助战干员
+    m_config->set_use_support_2(params.get("use_support_2", false));                 // 第 2 个开局干员是否为助战干员
+    m_config->set_use_support_3(params.get("use_support_3", false));                 // 第 3 个开局干员是否为助战干员
     m_config->set_use_nonfriend_support(params.get("use_nonfriend_support", false)); // 是否可以是非好友助战干员
 
     if (auto select_list = params.find<json::object>("collectible_mode_start_list"); select_list) {
@@ -228,7 +235,7 @@ bool asst::RoguelikeCustomStartTaskPlugin::hijack_core_char()
         { battle::Role::Sniper, "狙击" }, { battle::Role::Special, "特种" }, { battle::Role::Support, "辅助" },
         { battle::Role::Tank, "重装" },   { battle::Role::Warrior, "近卫" }
     };
-    const std::string& char_name = m_config->get_core_char();
+    const std::string& char_name = m_config->get_core_char_slot(m_config->status().recruit_count + 1);
     const auto& role = BattleData.get_role(char_name);
     auto role_iter = RoleOcrNameMap.find(role);
     if (role_iter == RoleOcrNameMap.cend()) {

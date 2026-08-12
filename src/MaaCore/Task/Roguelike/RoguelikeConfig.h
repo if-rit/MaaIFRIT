@@ -64,6 +64,7 @@ public:
 
     // ------------------ 招募 ------------------
     bool team_full_without_rookie = false; // 编队内没有预备干员（晋升优先级<200
+    int recruit_count = 0;                 // 当前是第几次招募（开局阶段为 1/2/3，由 RoguelikeRecruitTaskPlugin 维护）
 
     // ------------------ 商店 ------------------
     bool trader_no_longer_buy = false; // 不再购买藏品
@@ -191,9 +192,56 @@ public:
 
     const auto& get_core_char() const { return m_core_char; }
 
+    void set_core_char_2(std::string core_char) { m_core_char_2 = std::move(core_char); }
+
+    const auto& get_core_char_2() const { return m_core_char_2; }
+
+    void set_core_char_3(std::string core_char) { m_core_char_3 = std::move(core_char); }
+
+    const auto& get_core_char_3() const { return m_core_char_3; }
+
+    // 按槽位取开局干员名（槽位从 1 开始，最多 3 个），越界返回空串
+    const std::string& get_core_char_slot(int slot) const
+    {
+        static const std::string empty;
+        switch (slot) {
+        case 1:
+            return m_core_char;
+        case 2:
+            return m_core_char_2;
+        case 3:
+            return m_core_char_3;
+        default:
+            return empty;
+        }
+    }
+
     void set_use_support(bool use_support) { m_use_support = use_support; }
 
     bool get_use_support() const { return m_use_support; }
+
+    void set_use_support_2(bool use_support) { m_use_support_2 = use_support; }
+
+    bool get_use_support_2() const { return m_use_support_2; }
+
+    void set_use_support_3(bool use_support) { m_use_support_3 = use_support; }
+
+    bool get_use_support_3() const { return m_use_support_3; }
+
+    // 按槽位取是否使用助战（槽位从 1 开始），越界返回 false
+    bool get_use_support_slot(int slot) const
+    {
+        switch (slot) {
+        case 1:
+            return m_use_support;
+        case 2:
+            return m_use_support_2;
+        case 3:
+            return m_use_support_3;
+        default:
+            return false;
+        }
+    }
 
     void set_use_nonfriend_support(bool value) { m_use_nonfriend_support = value; }
 
@@ -203,8 +251,12 @@ private:
     RoguelikeStatus m_status; // 局内状态
 
     // ------------------ 开局 ------------------
-    std::string m_core_char;              // 开局干员名
-    bool m_use_support = false;           // 开局干员是否为助战干员
-    bool m_use_nonfriend_support = false; // 是否可以是非好友助战干员
+    std::string m_core_char;               // 第 1 个开局干员名
+    std::string m_core_char_2;             // 第 2 个开局干员名
+    std::string m_core_char_3;             // 第 3 个开局干员名
+    bool m_use_support = false;            // 第 1 个开局干员是否为助战干员
+    bool m_use_support_2 = false;          // 第 2 个开局干员是否为助战干员
+    bool m_use_support_3 = false;          // 第 3 个开局干员是否为助战干员
+    bool m_use_nonfriend_support = false;  // 是否可以是非好友助战干员
 };
 } // namespace asst

@@ -571,13 +571,25 @@ Tag 等级（大于等于 3）和对应的希望招募时限，单位为分钟�
 开局职业组。  
 :::  
 ::: field name="core_char" type="string" optional  
-开局干员名。仅支持单个干员**中文名**，无论区服；若留空或设置为空字符串 `""` 则根据练度自动选择。  
+第 1 个开局干员名。仅支持干员**中文名**，无论区服；若留空或设置为空字符串 `""` 则根据练度自动选择。  
+:::  
+::: field name="core_char_2" type="string" optional  
+第 2 个开局干员名。开局共有 3 张招募券（种类由 `roles` 决定），分别对应第 1/2/3 个开局干员；留空则该次招募按练度自动选择。  
+:::  
+::: field name="core_char_3" type="string" optional  
+第 3 个开局干员名。留空则该次招募按练度自动选择。  
 :::  
 ::: field name="use_support" type="boolean" optional default="false"  
-开局干员是否为助战干员。  
+第 1 个开局干员是否为助战干员。  
+:::  
+::: field name="use_support_2" type="boolean" optional default="false"  
+第 2 个开局干员是否为助战干员。  
+:::  
+::: field name="use_support_3" type="boolean" optional default="false"  
+第 3 个开局干员是否为助战干员。  
 :::  
 ::: field name="use_nonfriend_support" type="boolean" optional default="false"  
-是否可以是非好友助战干员。仅在 `use_support` 为 true 时有效。  
+是否可以是非好友助战干员。在任一 `use_support`/`use_support_2`/`use_support_3` 为 true 时有效。  
 :::  
 ::: field name="starts_count" type="number" optional default="2147483647"  
 开始探索的次数。达到后自动停止任务。  

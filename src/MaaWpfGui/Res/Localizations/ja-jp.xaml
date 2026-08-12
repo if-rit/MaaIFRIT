@@ -226,6 +226,8 @@
     <system:String x:Key="StartingSquad">最初の分隊</system:String>
     <system:String x:Key="StartingRoles">最初の職業</system:String>
     <system:String x:Key="StartingCoreChar">最初の{key=Operator}</system:String>
+    <system:String x:Key="StartingCoreChar2">2人目の{key=Operator}</system:String>
+    <system:String x:Key="StartingCoreChar3">3人目の{key=Operator}</system:String>
     <system:String x:Key="StartingCoreCharTip">記入がない場合はデフォルトの方針を使用します。</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">この{key=Operator}がbattle_dataにありません。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">｢{key=StartingCoreChar}｣ 直接昇進</system:String>
@@ -236,6 +238,8 @@
     <system:String x:Key="RoguelikeCollapseList">崩壊パラダイムリスト</system:String>
     <system:String x:Key="RoguelikeCollapseListTip">英語のセミコロン ｢;｣ で区切る、空白のままにするとデフォルトリストが使用されます。</system:String>
     <system:String x:Key="RoguelikeUseSupportUnit">｢{key=StartingCoreChar}｣ をサポートから選択</system:String>
+    <system:String x:Key="RoguelikeUseSupportUnit2">｢{key=StartingCoreChar2}｣ をサポートから選択</system:String>
+    <system:String x:Key="RoguelikeUseSupportUnit3">｢{key=StartingCoreChar3}｣ をサポートから選択</system:String>
     <system:String x:Key="RoguelikeRequireStartingCoreChar">まず ｢{key=StartingCoreChar}｣ を入力してください</system:String>
     <system:String x:Key="RoguelikeUseNonFriendSupport">戦友以外のサポートの使用を許可</system:String>
     <system:String x:Key="RoguelikeDelayAbortUntilCombatComplete">自動ローグ 戦闘終了まえに ｢{key=Stop}｣ を遅らせる</system:String>

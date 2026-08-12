@@ -55,6 +55,10 @@ public class RoguelikeTask : BaseTask
 
     public string CoreChar { get; set; } = string.Empty;
 
+    public string CoreChar2 { get; set; } = string.Empty;
+
+    public string CoreChar3 { get; set; } = string.Empty;
+
     /// <summary>
     /// Gets or sets a value indicating whether 启用投资
     /// </summary>
@@ -119,6 +123,10 @@ public class RoguelikeTask : BaseTask
     /// Gets or sets a value indicating whether 使用好友助战
     /// </summary>
     public bool UseSupport { get; set; }
+
+    public bool UseSupport2 { get; set; }
+
+    public bool UseSupport3 { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether 使用非好友助战

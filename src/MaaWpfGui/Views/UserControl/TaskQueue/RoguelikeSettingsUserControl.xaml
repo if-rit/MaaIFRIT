@@ -113,7 +113,7 @@
                 </StackPanel>
                 <hc:ComboBox
                     Name="StartingCoreCharComboBox"
-                    Margin="0,0,0,15"
+                    Margin="0,0,0,6"
                     DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
                     IsEditable="True"
                     IsTextSearchEnabled="False"
@@ -128,6 +128,46 @@
                         </Binding>
                     </hc:ComboBox.Text>
                 </hc:ComboBox>
+                <StackPanel Margin="0,0,0,6" Orientation="Horizontal">
+                    <controls:TextBlock Margin="8,0,8,0" VerticalAlignment="Center" Text="{DynamicResource StartingCoreChar2}" />
+                    <hc:ComboBox
+                        Name="StartingCoreChar2ComboBox"
+                        Width="200"
+                        DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
+                        IsEditable="True"
+                        IsTextSearchEnabled="False"
+                        ItemsSource="{Binding RoguelikeCoreCharList}"
+                        Loaded="{s:Action MakeComboBoxSearchable,
+                                          Target={x:Type ui_vms:SettingsViewModel}}">
+                        <hc:ComboBox.Text>
+                            <Binding Path="RoguelikeCoreChar2" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:StartingCoreCharRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </hc:ComboBox.Text>
+                    </hc:ComboBox>
+                </StackPanel>
+                <StackPanel Margin="0,0,0,15" Orientation="Horizontal">
+                    <controls:TextBlock Margin="8,0,8,0" VerticalAlignment="Center" Text="{DynamicResource StartingCoreChar3}" />
+                    <hc:ComboBox
+                        Name="StartingCoreChar3ComboBox"
+                        Width="200"
+                        DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
+                        IsEditable="True"
+                        IsTextSearchEnabled="False"
+                        ItemsSource="{Binding RoguelikeCoreCharList}"
+                        Loaded="{s:Action MakeComboBoxSearchable,
+                                          Target={x:Type ui_vms:SettingsViewModel}}">
+                        <hc:ComboBox.Text>
+                            <Binding Path="RoguelikeCoreChar3" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <local:StartingCoreCharRule />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </hc:ComboBox.Text>
+                    </hc:ComboBox>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
 
@@ -314,14 +354,32 @@
                     Grid.Column="1"
                     TooltipText="{DynamicResource RoguelikeRequireStartingCoreChar}" />
             </StackPanel>
+            <CheckBox
+                Margin="0,0,0,6"
+                IsChecked="{Binding RoguelikeUseSupportUnit2}"
+                IsEnabled="{c:Binding 'RoguelikeCoreChar2 != &quot;&quot;'}">
+                <TextBlock
+                    Block.TextAlignment="Left"
+                    Text="{DynamicResource RoguelikeUseSupportUnit2}"
+                    TextWrapping="Wrap" />
+            </CheckBox>
+            <CheckBox
+                Margin="0,0,0,6"
+                IsChecked="{Binding RoguelikeUseSupportUnit3}"
+                IsEnabled="{c:Binding 'RoguelikeCoreChar3 != &quot;&quot;'}">
+                <TextBlock
+                    Block.TextAlignment="Left"
+                    Text="{DynamicResource RoguelikeUseSupportUnit3}"
+                    TextWrapping="Wrap" />
+            </CheckBox>
             <StackPanel
-                Margin="0,-2.5,0,0"
+                Margin="0,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Orientation="Horizontal"
-                Visibility="{c:Binding 'RoguelikeUseSupportUnit and RoguelikeCoreChar != &quot;&quot;'}">
+                Visibility="{c:Binding 'RoguelikeUseSupportUnit or RoguelikeUseSupportUnit2 or RoguelikeUseSupportUnit3'}">
                 <controls:TextBlock Margin="2.5,0,7.5,0" Text="└" />
-                <CheckBox IsChecked="{Binding RoguelikeEnableNonfriendSupport}" IsEnabled="{c:Binding 'RoguelikeCoreChar != &quot;&quot;'}">
+                <CheckBox IsChecked="{Binding RoguelikeEnableNonfriendSupport}">
                     <TextBlock
                         Block.TextAlignment="Left"
                         Text="{DynamicResource RoguelikeUseNonFriendSupport}"

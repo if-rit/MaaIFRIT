@@ -464,6 +464,38 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         }
     }
 
+    /// <summary>
+    /// Gets or sets the roguelike second core character.
+    /// </summary>
+    public string RoguelikeCoreChar2
+    {
+        get => GetTaskConfig<RoguelikeTask>().CoreChar2;
+        set {
+            if (!SetTaskConfig<RoguelikeTask>(t => t.CoreChar2 == value, t => t.CoreChar2 = value))
+            {
+                return;
+            }
+
+            Instances.TaskQueueViewModel.AddLog("Core Char 2: " + value);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the roguelike third core character.
+    /// </summary>
+    public string RoguelikeCoreChar3
+    {
+        get => GetTaskConfig<RoguelikeTask>().CoreChar3;
+        set {
+            if (!SetTaskConfig<RoguelikeTask>(t => t.CoreChar3 == value, t => t.CoreChar3 = value))
+            {
+                return;
+            }
+
+            Instances.TaskQueueViewModel.AddLog("Core Char 3: " + value);
+        }
+    }
+
     private ObservableCollection<string> _roguelikeCoreCharList = [];
 
     /// <summary>
@@ -476,6 +508,16 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
             if (!string.IsNullOrEmpty(RoguelikeCoreChar) && !value.Contains(RoguelikeCoreChar))
             {
                 value.Add(RoguelikeCoreChar);
+            }
+
+            if (!string.IsNullOrEmpty(RoguelikeCoreChar2) && !value.Contains(RoguelikeCoreChar2))
+            {
+                value.Add(RoguelikeCoreChar2);
+            }
+
+            if (!string.IsNullOrEmpty(RoguelikeCoreChar3) && !value.Contains(RoguelikeCoreChar3))
+            {
+                value.Add(RoguelikeCoreChar3);
             }
 
             SetAndNotify(ref _roguelikeCoreCharList, value);
@@ -652,6 +694,38 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
             }
 
             SetTaskConfig<RoguelikeTask>(t => t.UseSupport == value, t => t.UseSupport = value);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use support unit for the second core char.
+    /// </summary>
+    public bool RoguelikeUseSupportUnit2
+    {
+        get => GetTaskConfig<RoguelikeTask>().UseSupport2;
+        set {
+            if (value && RoguelikeStartWithEliteTwo && RoguelikeSquadIsProfessional)
+            {
+                RoguelikeStartWithEliteTwo = false;
+            }
+
+            SetTaskConfig<RoguelikeTask>(t => t.UseSupport2 == value, t => t.UseSupport2 = value);
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to use support unit for the third core char.
+    /// </summary>
+    public bool RoguelikeUseSupportUnit3
+    {
+        get => GetTaskConfig<RoguelikeTask>().UseSupport3;
+        set {
+            if (value && RoguelikeStartWithEliteTwo && RoguelikeSquadIsProfessional)
+            {
+                RoguelikeStartWithEliteTwo = false;
+            }
+
+            SetTaskConfig<RoguelikeTask>(t => t.UseSupport3 == value, t => t.UseSupport3 = value);
         }
     }
 
@@ -1067,7 +1141,11 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
                 Squad = roguelike.Squad,
                 Roles = roguelike.Roles,
                 CoreChar = DataHelper.GetCharacterByNameOrAlias(roguelike.CoreChar)?.Name ?? roguelike.CoreChar,
+                CoreChar2 = DataHelper.GetCharacterByNameOrAlias(roguelike.CoreChar2)?.Name ?? roguelike.CoreChar2,
+                CoreChar3 = DataHelper.GetCharacterByNameOrAlias(roguelike.CoreChar3)?.Name ?? roguelike.CoreChar3,
                 UseSupport = roguelike.UseSupport,
+                UseSupport2 = roguelike.UseSupport2,
+                UseSupport3 = roguelike.UseSupport3,
                 UseSupportNonFriend = roguelike.UseSupportNonFriend,
 
                 InvestmentEnabled = roguelike.Investment,

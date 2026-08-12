@@ -47,6 +47,8 @@ public partial class RoguelikeSettingsUserControl : System.Windows.Controls.User
             if (!IsValidResult)
             {
                 _current.StartingCoreCharComboBox.ItemsSource = DataHelper.CharacterNames;
+                _current.StartingCoreChar2ComboBox?.ItemsSource = DataHelper.CharacterNames;
+                _current.StartingCoreChar3ComboBox?.ItemsSource = DataHelper.CharacterNames;
             }
         }
     }
@@ -58,9 +60,14 @@ public partial class RoguelikeSettingsUserControl : System.Windows.Controls.User
             return;
         }
 
-        var name = StartingCoreCharComboBox.Text;
-        StartingCoreCharComboBox.ItemsSource = TaskQueueViewModel.RoguelikeTask.RoguelikeCoreCharList;
-        StartingCoreCharComboBox.Text = name;
+        if (sender is not ComboBox comboBox)
+        {
+            return;
+        }
+
+        var name = comboBox.Text;
+        comboBox.ItemsSource = TaskQueueViewModel.RoguelikeTask.RoguelikeCoreCharList;
+        comboBox.Text = name;
     }
 }
 
