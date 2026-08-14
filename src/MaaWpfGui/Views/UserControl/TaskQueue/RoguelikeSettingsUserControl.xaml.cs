@@ -13,11 +13,9 @@
 
 #pragma warning disable SA1402
 
-using System;
 using System.Globalization;
 using System.Windows.Controls;
 using MaaWpfGui.Helper;
-using MaaWpfGui.ViewModels.UI;
 
 namespace MaaWpfGui.Views.UserControl.TaskQueue;
 
@@ -32,42 +30,6 @@ public partial class RoguelikeSettingsUserControl : System.Windows.Controls.User
     public RoguelikeSettingsUserControl()
     {
         InitializeComponent();
-        _current = this;
-    }
-
-    private static RoguelikeSettingsUserControl _current;
-    private static bool _isValidResult;
-
-    internal static bool IsValidResult
-    {
-        get => _isValidResult;
-        set
-        {
-            _isValidResult = value;
-            if (!IsValidResult)
-            {
-                _current.StartingCoreCharComboBox.ItemsSource = DataHelper.CharacterNames;
-                _current.StartingCoreChar2ComboBox?.ItemsSource = DataHelper.CharacterNames;
-                _current.StartingCoreChar3ComboBox?.ItemsSource = DataHelper.CharacterNames;
-            }
-        }
-    }
-
-    private void StartingCoreCharComboBox_DropDownClosed(object sender, EventArgs e)
-    {
-        if (!IsValidResult)
-        {
-            return;
-        }
-
-        if (sender is not ComboBox comboBox)
-        {
-            return;
-        }
-
-        var name = comboBox.Text;
-        comboBox.ItemsSource = TaskQueueViewModel.RoguelikeTask.RoguelikeCoreCharList;
-        comboBox.Text = name;
     }
 }
 
@@ -82,11 +44,9 @@ public class StartingCoreCharRule : ValidationRule
 
         if (!string.IsNullOrEmpty(stringValue) && DataHelper.GetCharacterByNameOrAlias(stringValue) is null)
         {
-            RoguelikeSettingsUserControl.IsValidResult = false;
             return new ValidationResult(false, LocalizationHelper.GetString("RoguelikeStartingCoreCharNotFound"));
         }
 
-        RoguelikeSettingsUserControl.IsValidResult = true;
         return ValidationResult.ValidResult;
     }
 }

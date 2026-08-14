@@ -228,7 +228,7 @@
     <system:String x:Key="StartingCoreChar">시작 {key=Operator}</system:String>
     <system:String x:Key="StartingCoreChar2">2번째 {key=Operator} (선택)</system:String>
     <system:String x:Key="StartingCoreChar3">3번째 {key=Operator} (선택)</system:String>
-    <system:String x:Key="StartingCoreCharTip">작성하지 않으면 기본 설정이 사용됩니다.</system:String>
+    <system:String x:Key="StartingCoreCharTip">작성하지 않으면 기본 설정이 사용됩니다. 같은 오퍼레이터를 선택하면 첫 번째만 유효하며, 이후 중복은 빈칸과 동일하게 처리됩니다.</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">해당 {key=Operator}는 battle_data에 없습니다</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">｢{key=StartingCoreChar}｣ 2차 정예화까지 반복</system:String>
     <system:String x:Key="RoguelikeOnlyStartWithEliteTwo">｢{key=StartingCoreChar}｣ 2차 정예화까지 반복, 전투 X</system:String>

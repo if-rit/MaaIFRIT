@@ -114,7 +114,6 @@
                 <hc:ComboBox
                     Name="StartingCoreCharComboBox"
                     Margin="0,0,0,6"
-                    DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
                     IsEditable="True"
                     IsTextSearchEnabled="False"
                     ItemsSource="{Binding RoguelikeCoreCharList}"
@@ -134,7 +133,6 @@
                 <hc:ComboBox
                     Name="StartingCoreChar2ComboBox"
                     Margin="0,0,0,6"
-                    DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
                     IsEditable="True"
                     IsTextSearchEnabled="False"
                     ItemsSource="{Binding RoguelikeCoreCharList}"
@@ -154,7 +152,6 @@
                 <hc:ComboBox
                     Name="StartingCoreChar3ComboBox"
                     Margin="0,0,0,15"
-                    DropDownClosed="StartingCoreCharComboBox_DropDownClosed"
                     IsEditable="True"
                     IsTextSearchEnabled="False"
                     ItemsSource="{Binding RoguelikeCoreCharList}"
