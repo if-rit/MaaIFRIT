@@ -225,9 +225,9 @@
     <system:String x:Key="RoguelikeJieGardenTargetFound">ターゲット常楽スポット {0} を見つけた</system:String>
     <system:String x:Key="StartingSquad">最初の分隊</system:String>
     <system:String x:Key="StartingRoles">最初の職業</system:String>
-    <system:String x:Key="StartingCoreChar">最初の{key=Operator}</system:String>
-    <system:String x:Key="StartingCoreChar2">2人目の{key=Operator}（省略可）</system:String>
-    <system:String x:Key="StartingCoreChar3">3人目の{key=Operator}（省略可）</system:String>
+    <system:String x:Key="StartingCoreChar">最初の{key=Operator}1</system:String>
+    <system:String x:Key="StartingCoreChar2">最初の{key=Operator}2</system:String>
+    <system:String x:Key="StartingCoreChar3">最初の{key=Operator}3</system:String>
     <system:String x:Key="StartingCoreCharTip">記入がない場合はデフォルトの方針を使用します。同じオペレーターを選択した場合は最初の1回のみ有効で、以降の重複は未入力と同じ扱いになります。</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">この{key=Operator}がbattle_dataにありません。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">｢{key=StartingCoreChar}｣ 直接昇進</system:String>

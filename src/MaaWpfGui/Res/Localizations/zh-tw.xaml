@@ -225,9 +225,9 @@
     <system:String x:Key="RoguelikeJieGardenTargetFound">發現目標常樂節點 {0}</system:String>
     <system:String x:Key="StartingSquad">開局分隊</system:String>
     <system:String x:Key="StartingRoles">開局職業組</system:String>
-    <system:String x:Key="StartingCoreChar">開局{key=Operator}</system:String>
-    <system:String x:Key="StartingCoreChar2">第二{key=Operator}（可選）</system:String>
-    <system:String x:Key="StartingCoreChar3">第三{key=Operator}（可選）</system:String>
+    <system:String x:Key="StartingCoreChar">開局{key=Operator}1</system:String>
+    <system:String x:Key="StartingCoreChar2">開局{key=Operator}2</system:String>
+    <system:String x:Key="StartingCoreChar3">開局{key=Operator}3</system:String>
     <system:String x:Key="StartingCoreCharTip">不填寫則使用預設策略；選擇同一幹員相當於只有第一次有效，後續重複相當於留空。</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">輸入的{key=Operator}未在戰鬥數據 (battle_data) 中。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">凹 ｢{key=StartingCoreChar}｣ 直升精二</system:String>
