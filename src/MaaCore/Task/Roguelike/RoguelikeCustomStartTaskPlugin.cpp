@@ -1,5 +1,8 @@
 #include "RoguelikeCustomStartTaskPlugin.h"
 
+#include <algorithm>
+#include <vector>
+
 #include "Config/GeneralConfig.h"
 #include "Config/Miscellaneous/BattleDataConfig.h"
 #include "Config/TaskData.h"
@@ -79,13 +82,53 @@ bool asst::RoguelikeCustomStartTaskPlugin::load_params(const json::value& params
         m_collectible_mode_squad = params.get("collectible_mode_squad", m_squad);
     }
 
-    m_config->set_core_char(params.get("core_char", ""));                            // 第 1 个开局干员名
-    m_config->set_core_char_2(params.get("core_char_2", ""));                        // 第 2 个开局干员名
-    m_config->set_core_char_3(params.get("core_char_3", ""));                        // 第 3 个开局干员名
+    // 开局干员槽位「紧凑重排」：跳过空槽与重复干员（重复的第二个视为空位），
+    // 把有填的干员（连同各自助战开关）紧凑到前 N 个槽位。
+    // 避免「空槽位把指定干员推后，导致其职业券在轮到它之前被默认招募消耗」（如 空/芬/电弧 → 槽1=芬、槽2=电弧、槽3=空）。
+    struct CoreCharEntry {
+        std::string name;
+        bool use_support;
+    };
+    std::vector<CoreCharEntry> entries;
+    auto push_entry = [&](const std::string& name, bool use_support) {
+        if (name.empty()) {
+            return;
+        }
+        if (std::ranges::find(entries, name, &CoreCharEntry::name) != entries.end()) {
+            return; // 相同干员重复 → 视为空位
+        }
+        entries.emplace_back(name, use_support);
+    };
+    push_entry(params.get("core_char", ""), params.get("use_support", false));
+    push_entry(params.get("core_char_2", ""), params.get("use_support_2", false));
+    push_entry(params.get("core_char_3", ""), params.get("use_support_3", false));
+
+    auto set_slot = [&](int slot, const std::string& name, bool use_support) {
+        switch (slot) {
+        case 1:
+            m_config->set_core_char(name);
+            m_config->set_use_support(use_support);
+            break;
+        case 2:
+            m_config->set_core_char_2(name);
+            m_config->set_use_support_2(use_support);
+            break;
+        case 3:
+            m_config->set_core_char_3(name);
+            m_config->set_use_support_3(use_support);
+            break;
+        }
+    };
+    for (int slot = 1; slot <= 3; ++slot) {
+        if (slot <= static_cast<int>(entries.size())) {
+            set_slot(slot, entries[slot - 1].name, entries[slot - 1].use_support);
+        }
+        else {
+            set_slot(slot, std::string(), false);
+        }
+    }
+
     set_custom(RoguelikeCustomType::Roles, params.get("roles", ""));                 // 开局职业组
-    m_config->set_use_support(params.get("use_support", false));                     // 第 1 个开局干员是否为助战干员
-    m_config->set_use_support_2(params.get("use_support_2", false));                 // 第 2 个开局干员是否为助战干员
-    m_config->set_use_support_3(params.get("use_support_3", false));                 // 第 3 个开局干员是否为助战干员
     m_config->set_use_nonfriend_support(params.get("use_nonfriend_support", false)); // 是否可以是非好友助战干员
 
     if (auto select_list = params.find<json::object>("collectible_mode_start_list"); select_list) {
