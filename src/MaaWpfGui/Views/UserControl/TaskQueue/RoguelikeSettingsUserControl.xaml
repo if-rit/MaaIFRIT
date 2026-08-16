@@ -374,7 +374,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Orientation="Horizontal"
-                Visibility="{c:Binding 'RoguelikeUseSupportUnit or RoguelikeUseSupportUnit2 or RoguelikeUseSupportUnit3'}">
+                Visibility="{c:Binding '(RoguelikeUseSupportUnit and RoguelikeCoreChar != &quot;&quot;) or (RoguelikeUseSupportUnit2 and RoguelikeCoreChar2 != &quot;&quot;) or (RoguelikeUseSupportUnit3 and RoguelikeCoreChar3 != &quot;&quot;)'}">
                 <controls:TextBlock Margin="2.5,0,7.5,0" Text="└" />
                 <CheckBox IsChecked="{Binding RoguelikeEnableNonfriendSupport}">
                     <TextBlock
