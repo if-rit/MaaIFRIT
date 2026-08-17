@@ -13,9 +13,14 @@
 
 #pragma warning disable SA1402
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Threading;
 using MaaWpfGui.Helper;
+using MaaWpfGui.ViewModels.UserControl.TaskQueue;
 
 namespace MaaWpfGui.Views.UserControl.TaskQueue;
 
@@ -30,6 +35,59 @@ public partial class RoguelikeSettingsUserControl : System.Windows.Controls.User
     public RoguelikeSettingsUserControl()
     {
         InitializeComponent();
+    }
+
+    private void StartingCoreCharComboBox_DropDownClosed(object sender, EventArgs e)
+    {
+        if (sender is not ComboBox comboBox || Validation.GetHasError(comboBox))
+        {
+            return;
+        }
+
+        var name = comboBox.Text;
+        SetItemsSource(comboBox, RoguelikeSettingsUserControlModel.Instance.RoguelikeCoreCharList);
+        comboBox.Text = name;
+    }
+
+    private void OnStartingCoreCharValidationError(object sender, ValidationErrorEventArgs e)
+    {
+        if (e.Action != ValidationErrorEventAction.Added ||
+            sender is not ComboBox comboBox ||
+            !Validation.GetHasError(comboBox))
+        {
+            return;
+        }
+
+        comboBox.Dispatcher.BeginInvoke(
+            new Action(() =>
+            {
+                if (!Validation.GetHasError(comboBox))
+                {
+                    return;
+                }
+
+                var name = comboBox.Text;
+                SetItemsSource(comboBox, DataHelper.CharacterNames);
+                if (comboBox.Text != name)
+                {
+                    comboBox.Text = name;
+                }
+            }),
+            DispatcherPriority.Background);
+    }
+
+    private static void SetItemsSource(ComboBox comboBox, IEnumerable<string> source)
+    {
+        if (comboBox.ItemsSource is CollectionView currentView &&
+            ReferenceEquals(currentView.SourceCollection, source))
+        {
+            return;
+        }
+
+        var view = new CollectionViewSource { Source = source };
+        comboBox.ItemsSource = view.View;
+        comboBox.Items.Filter = null;
+        comboBox.Items.IsLiveFiltering = true;
     }
 }
 
