@@ -1,0 +1,122 @@
+<!--
+单选项搜索选择器：输入即过滤 + 可选中 + 失焦/回车/▼提交。
+行为规格见 work-docs/设计文档/单选项搜索选择器-交互与状态机设计.md。
+-->
+
+<UserControl
+    x:Class="MaaWpfGui.Styles.Controls.SingleOptionSearchBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="clr-namespace:MaaWpfGui.Helper"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignWidth="220"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <!-- 错误色（红），避免依赖外部 DangerBrush -->
+        <SolidColorBrush x:Key="SearchBoxErrorBrush" Color="#E64545" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 输入框 + 水印 + 框内按钮 -->
+        <Border
+            x:Name="BoxBorder"
+            Grid.Row="0"
+            MinHeight="30"
+            Background="{DynamicResource RegionBrushOpacity25}"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1"
+            CornerRadius="4">
+            <Grid>
+                <TextBox
+                    x:Name="InputTextBox"
+                    Padding="8,0,30,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    CaretBrush="{DynamicResource PrimaryTextBrush}"
+                    Foreground="{DynamicResource PrimaryTextBrush}"
+                    GotKeyboardFocus="OnTextBoxGotKeyboardFocus"
+                    LostKeyboardFocus="OnTextBoxLostKeyboardFocus"
+                    PreviewKeyDown="OnTextBoxPreviewKeyDown"
+                    Style="{StaticResource MaaTextBoxDefaultStyle}"
+                    TextChanged="OnTextBoxTextChanged" />
+                <TextBlock
+                    x:Name="WatermarkTextBlock"
+                    Margin="8,0,30,0"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource ThirdlyTextBrush}"
+                    IsHitTestVisible="False"
+                    Text="{Binding Placeholder, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                    Visibility="Collapsed" />
+                <ToggleButton
+                    x:Name="ToggleButton"
+                    Width="28"
+                    HorizontalAlignment="Right"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="OnToggleButtonClick"
+                    Cursor="Hand"
+                    Focusable="False">
+                    <TextBlock
+                        x:Name="ToggleIconText"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Foreground="{DynamicResource PrimaryTextBrush}"
+                        Text="▶" />
+                </ToggleButton>
+            </Grid>
+        </Border>
+
+        <!-- 内联错误提示 -->
+        <TextBlock
+            x:Name="ErrorHintTextBlock"
+            Grid.Row="1"
+            Margin="8,2,0,0"
+            Foreground="{DynamicResource SearchBoxErrorBrush}"
+            Text="{Binding ErrorText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            TextWrapping="Wrap"
+            Visibility="Collapsed" />
+
+        <!-- 下拉浮层 -->
+        <Popup
+            x:Name="DropdownPopup"
+            Width="{Binding ActualWidth, ElementName=BoxBorder}"
+            AllowsTransparency="True"
+            helper:MouseWheelHelper.IsolateParentScroll="True"
+            Placement="Bottom"
+            PlacementTarget="{Binding ElementName=BoxBorder}"
+            StaysOpen="False">
+            <Border
+                Background="{DynamicResource RegionBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+                <Grid>
+                    <ListBox
+                        x:Name="ResultsListBox"
+                        MaxHeight="300"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        DisplayMemberPath="Name"
+                        Focusable="False"
+                        ItemContainerStyle="{StaticResource TransparentListBoxItemStyle}"
+                        PreviewMouseLeftButtonUp="OnResultsListBoxPreviewMouseLeftButtonUp"
+                        ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        VirtualizingPanel.IsVirtualizing="True"
+                        VirtualizingPanel.VirtualizationMode="Recycling" />
+                    <TextBlock
+                        x:Name="EmptyResultTextBlock"
+                        Margin="8,6"
+                        Foreground="{DynamicResource ThirdlyTextBrush}"
+                        Text="{Binding ErrorText, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                        Visibility="Collapsed" />
+                </Grid>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

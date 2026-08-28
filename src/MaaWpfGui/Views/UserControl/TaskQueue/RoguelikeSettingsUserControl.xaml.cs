@@ -11,12 +11,6 @@
 // but WITHOUT ANY WARRANTY
 // </copyright>
 
-#pragma warning disable SA1402
-
-using System.Globalization;
-using System.Windows.Controls;
-using MaaWpfGui.Helper;
-
 namespace MaaWpfGui.Views.UserControl.TaskQueue;
 
 /// <summary>
@@ -30,23 +24,5 @@ public partial class RoguelikeSettingsUserControl : System.Windows.Controls.User
     public RoguelikeSettingsUserControl()
     {
         InitializeComponent();
-    }
-}
-
-public class StartingCoreCharRule : ValidationRule
-{
-    public override ValidationResult Validate(object value, CultureInfo cultureInfo)
-    {
-        if (value is not string stringValue)
-        {
-            return new ValidationResult(false, HandyControl.Properties.Langs.Lang.FormatError);
-        }
-
-        if (!string.IsNullOrEmpty(stringValue) && DataHelper.GetCharacterByNameOrAlias(stringValue) is null)
-        {
-            return new ValidationResult(false, LocalizationHelper.GetString("RoguelikeStartingCoreCharNotFound"));
-        }
-
-        return ValidationResult.ValidResult;
     }
 }

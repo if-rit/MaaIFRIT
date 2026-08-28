@@ -45,6 +45,7 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         Instance = new();
         Instances.AsstProxy.AsstSubTaskMsgEvent += Instance.ProcSubTaskMsg;
         LocalizationHelper.LanguageChanged += Instance.RefreshLocalization;
+        SettingsViewModel.GuiSettings.OperNameLanguageChanged += Instance.UpdateRoguelikeCoreCharOptions;
     }
 
     public static RoguelikeSettingsUserControlModel Instance { get; }
@@ -62,7 +63,7 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         UpdateRoguelikeRolesList();
         UpdateRoguelikeSquadList();
         UpdateRoguelikeStartWithAllDict();
-        UpdateRoguelikeCoreCharList();
+        UpdateRoguelikeCoreCharOptions();
     }
 
     private void UpdateRoguelikeDifficultyList()
@@ -261,58 +262,85 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         RoguelikeCollectibleModeSquad = RoguelikeSquadList.Any(x => x.Value == roguelikeSquadCollectible) ? roguelikeSquadCollectible : RoguelikeSquad;
     }
 
-    private void UpdateRoguelikeCoreCharList()
+    private void UpdateRoguelikeCoreCharOptions()
     {
+        // 1. 收集 recruitment.json 中 is_start == true 的中文名集（与干员中文名匹配，语言无关）
+        var isStartNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var filePath = $"resource/roguelike/{RoguelikeTheme}/recruitment.json";
-        if (!File.Exists(filePath))
+        if (File.Exists(filePath))
         {
-            RoguelikeCoreCharList.Clear();
-            return;
-        }
-
-        var jsonStr = File.ReadAllText(filePath);
-        var json = (JObject?)JsonConvert.DeserializeObject(jsonStr);
-
-        var roguelikeCoreCharList = new ObservableCollection<string>();
-
-        if (json?["priority"] is JArray priorityArray)
-        {
-            foreach (var priorityItem in priorityArray)
+            var jsonStr = File.ReadAllText(filePath);
+            var json = (JObject?)JsonConvert.DeserializeObject(jsonStr);
+            if (json?["priority"] is JArray priorityArray)
             {
-                if (priorityItem?["opers"] is not JArray opersArray)
+                foreach (var priorityItem in priorityArray)
                 {
-                    continue;
-                }
-
-                foreach (var operItem in opersArray)
-                {
-                    var isStart = (bool?)operItem["is_start"] ?? false;
-                    if (!isStart)
+                    if (priorityItem?["opers"] is not JArray opersArray)
                     {
                         continue;
                     }
 
-                    var name = (string?)operItem["name"];
-                    if (string.IsNullOrEmpty(name))
+                    foreach (var operItem in opersArray)
                     {
-                        continue;
-                    }
-
-                    if (!DataHelper.IsCharacterAvailableInClient(name, SettingsViewModel.GameSettings.ClientType.ToCustomString()))
-                    {
-                        continue;
-                    }
-
-                    var localizedName = DataHelper.GetLocalizedCharacterName(name, SettingsViewModel.GuiSettings.OperNameLocalization);
-                    if (!string.IsNullOrEmpty(localizedName))
-                    {
-                        roguelikeCoreCharList.Add(localizedName);
+                        if ((bool?)operItem["is_start"] ?? false)
+                        {
+                            var name = (string?)operItem["name"];
+                            if (!string.IsNullOrEmpty(name))
+                            {
+                                isStartNames.Add(name);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        RoguelikeCoreCharList = roguelikeCoreCharList;
+        // 2. 遍历全量干员，组装 Option（当前语言展示名 + 其余服名 + IsStart 标记）
+        var clientType = SettingsViewModel.GameSettings.ClientType.ToCustomString();
+        var operNameLocalization = SettingsViewModel.GuiSettings.OperNameLocalization;
+        var options = new List<Option>();
+        foreach (var info in DataHelper.Operators.Values)
+        {
+            if (!DataHelper.IsCharacterAvailableInClient(info, clientType))
+            {
+                continue;
+            }
+
+            var localizedName = DataHelper.GetLocalizedCharacterName(info, operNameLocalization);
+            if (string.IsNullOrEmpty(localizedName))
+            {
+                continue;
+            }
+
+            var serverNames = new List<string>();
+            if (!info.NameTwUnavailable && !string.IsNullOrEmpty(info.NameTw))
+            {
+                serverNames.Add(info.NameTw);
+            }
+
+            if (!info.NameEnUnavailable && !string.IsNullOrEmpty(info.NameEn))
+            {
+                serverNames.Add(info.NameEn);
+            }
+
+            if (!info.NameJpUnavailable && !string.IsNullOrEmpty(info.NameJp))
+            {
+                serverNames.Add(info.NameJp);
+            }
+
+            if (!info.NameKrUnavailable && !string.IsNullOrEmpty(info.NameKr))
+            {
+                serverNames.Add(info.NameKr);
+            }
+
+            options.Add(new Option {
+                Name = localizedName,
+                IsStart = !string.IsNullOrEmpty(info.Name) && isStartNames.Contains(info.Name),
+                ServerNames = serverNames,
+            });
+        }
+
+        RoguelikeCoreCharOptions = new ObservableCollection<Option>(options);
     }
 
     private ObservableCollection<GenericCombinedData<int>> _roguelikeDifficultyList = [];
@@ -496,32 +524,15 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         }
     }
 
-    private ObservableCollection<string> _roguelikeCoreCharList = [];
+    private ObservableCollection<Option> _roguelikeCoreCharOptions = [];
 
     /// <summary>
-    /// Gets the roguelike core character.
+    /// Gets or sets the roguelike core character options（单选项搜索选择器的注入列表）。
     /// </summary>
-    public ObservableCollection<string> RoguelikeCoreCharList
+    public ObservableCollection<Option> RoguelikeCoreCharOptions
     {
-        get => _roguelikeCoreCharList;
-        private set {
-            if (!string.IsNullOrEmpty(RoguelikeCoreChar) && !value.Contains(RoguelikeCoreChar))
-            {
-                value.Add(RoguelikeCoreChar);
-            }
-
-            if (!string.IsNullOrEmpty(RoguelikeCoreChar2) && !value.Contains(RoguelikeCoreChar2))
-            {
-                value.Add(RoguelikeCoreChar2);
-            }
-
-            if (!string.IsNullOrEmpty(RoguelikeCoreChar3) && !value.Contains(RoguelikeCoreChar3))
-            {
-                value.Add(RoguelikeCoreChar3);
-            }
-
-            SetAndNotify(ref _roguelikeCoreCharList, value);
-        }
+        get => _roguelikeCoreCharOptions;
+        private set => SetAndNotify(ref _roguelikeCoreCharOptions, value);
     }
 
     /// <summary>
@@ -1235,5 +1246,6 @@ public class RoguelikeSettingsUserControlModel : TaskSettingsViewModel, Roguelik
         UpdateRoguelikeModeList();
         UpdateRoguelikeRolesList();
         UpdateRoguelikeSquadList();
+        UpdateRoguelikeCoreCharOptions();
     }
 }

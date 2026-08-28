@@ -229,6 +229,7 @@
     <system:String x:Key="StartingCoreChar2">最初の{key=Operator}2</system:String>
     <system:String x:Key="StartingCoreChar3">最初の{key=Operator}3</system:String>
     <system:String x:Key="StartingCoreCharTip">記入がない場合はデフォルトの方針を使用します。同じオペレーターを選択した場合は最初の1回のみ有効で、以降の重複は未入力と同じ扱いになります。</system:String>
+    <system:String x:Key="RoguelikeStartingCoreCharPlaceholder">選択しない</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">この{key=Operator}がbattle_dataにありません。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">｢{key=StartingCoreChar}｣ 直接昇進</system:String>
     <system:String x:Key="RoguelikeOnlyStartWithEliteTwo">｢{key=StartingCoreChar}｣ の昇進招集までリセマラし、戦闘を行わない</system:String>

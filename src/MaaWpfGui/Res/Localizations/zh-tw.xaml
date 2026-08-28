@@ -229,6 +229,7 @@
     <system:String x:Key="StartingCoreChar2">開局{key=Operator}2</system:String>
     <system:String x:Key="StartingCoreChar3">開局{key=Operator}3</system:String>
     <system:String x:Key="StartingCoreCharTip">不填寫則使用預設策略；選擇同一幹員相當於只有第一次有效，後續重複相當於留空。</system:String>
+    <system:String x:Key="RoguelikeStartingCoreCharPlaceholder">不選擇</system:String>
     <system:String x:Key="RoguelikeStartingCoreCharNotFound">輸入的{key=Operator}未在戰鬥數據 (battle_data) 中。</system:String>
     <system:String x:Key="RoguelikeStartWithEliteTwo">凹 ｢{key=StartingCoreChar}｣ 直升精二</system:String>
     <system:String x:Key="RoguelikeOnlyStartWithEliteTwo">只凹 ｢{key=StartingCoreChar}｣ 直升精二，不進行作戰</system:String>
