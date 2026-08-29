@@ -380,10 +380,17 @@ public partial class SingleOptionSearchBox : UserControl
     private void UpdateErrorVisual()
     {
         var errorBrush = (Brush?)TryFindResource("SearchBoxErrorBrush");
-        var normalBrush = (Brush?)TryFindResource("BorderBrush");
         var primaryBrush = (Brush?)TryFindResource("PrimaryTextBrush");
 
-        BoxBorder.BorderBrush = _hasError ? errorBrush : normalBrush;
+        if (_hasError)
+        {
+            BoxBorder.BorderBrush = errorBrush; // 本地值优先于 Style 触发器（错误时边框恒红）
+        }
+        else
+        {
+            BoxBorder.ClearValue(Border.BorderBrushProperty); // 交回 Style 触发器（默认灰 / hover 深灰 / 聚焦蓝）
+        }
+
         InputTextBox.Foreground = _hasError ? errorBrush : primaryBrush;
         ErrorHintTextBlock.Visibility = _hasError ? Visibility.Visible : Visibility.Collapsed;
     }
@@ -397,6 +404,8 @@ public partial class SingleOptionSearchBox : UserControl
 
     private void UpdateGlyph()
     {
-        ToggleIconText.Text = _isInputMode ? "▼" : "▶";
+        TogglePath.Data = _isInputMode
+            ? (Geometry)TryFindResource("SearchBoxUpGeometry")!
+            : (Geometry)TryFindResource("SearchBoxDownGeometry")!;
     }
 }
