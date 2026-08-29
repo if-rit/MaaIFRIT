@@ -135,10 +135,8 @@
                         DisplayMemberPath="Name"
                         Focusable="False"
                         PreviewMouseLeftButtonUp="OnResultsListBoxPreviewMouseLeftButtonUp"
-                        ScrollViewer.CanContentScroll="True"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        VirtualizingPanel.IsVirtualizing="True"
-                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        ScrollViewer.CanContentScroll="False"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto">
                         <ListBox.ItemContainerStyle>
                             <Style
                                 BasedOn="{StaticResource TransparentListBoxItemStyle}"
