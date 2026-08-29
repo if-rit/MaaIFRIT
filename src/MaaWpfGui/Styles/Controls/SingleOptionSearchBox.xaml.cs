@@ -166,6 +166,18 @@ public partial class SingleOptionSearchBox : UserControl
             return;
         }
 
+        if (e.Key is Key.Escape)
+        {
+            // §4.3 L97：输入态 Esc = ▼（提交 + 退出，忽略高亮项）；IME 组合中交给输入法取消组合；非输入态不处理
+            if (_isInputMode && !_isImeComposing && e.ImeProcessedKey == Key.None)
+            {
+                e.Handled = true;
+                CommitAndExit();
+            }
+
+            return;
+        }
+
         if (e.Key is Key.Down)
         {
             MoveSelection(1);
@@ -190,18 +202,29 @@ public partial class SingleOptionSearchBox : UserControl
 
     private void OnResultsListBoxPreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        if (sender is not ListBox listBox)
+        if (e.OriginalSource is not DependencyObject source)
         {
             return;
         }
 
-        var element = e.OriginalSource as DependencyObject;
-        var item = ItemsControl.ContainerFromElement(listBox, element) as ListBoxItem;
+        // 隧道阶段沿视觉树找点击项所在的 ListBoxItem（不依赖 SelectedItem 时机）
+        var item = FindVisualAncestor<ListBoxItem>(source);
         if (item?.DataContext is Option option)
         {
             e.Handled = true;
             CommitAndExit(option); // E7：点选 = 恒合法提交
         }
+    }
+
+    private static T? FindVisualAncestor<T>(DependencyObject? current)
+        where T : DependencyObject
+    {
+        while (current is not null and not T)
+        {
+            current = VisualTreeHelper.GetParent(current);
+        }
+
+        return current as T;
     }
 
     // ---------- IME ----------
@@ -323,6 +346,14 @@ public partial class SingleOptionSearchBox : UserControl
 
         UpdateErrorVisual();
         UpdateWatermark();
+
+        // §4.3 五件套第 4 步：退出输入态，控件放弃键盘焦点。
+        // 仅当焦点仍在输入框时主动清除（▼/回车/点选路径）；
+        // 失焦（E8）路径焦点已离开，不再清，避免吞掉正移向目标控件的焦点（点外部需点两次的问题）。
+        if (Keyboard.FocusedElement == InputTextBox)
+        {
+            Keyboard.ClearFocus();
+        }
     }
 
     private List<Option> FindExactMatches(string text)

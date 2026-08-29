@@ -89,7 +89,7 @@
             helper:MouseWheelHelper.IsolateParentScroll="True"
             Placement="Bottom"
             PlacementTarget="{Binding ElementName=BoxBorder}"
-            StaysOpen="False">
+            StaysOpen="True">
             <Border
                 Background="{DynamicResource RegionBrush}"
                 BorderBrush="{DynamicResource BorderBrush}"
@@ -103,12 +103,20 @@
                         BorderThickness="0"
                         DisplayMemberPath="Name"
                         Focusable="False"
-                        ItemContainerStyle="{StaticResource TransparentListBoxItemStyle}"
                         PreviewMouseLeftButtonUp="OnResultsListBoxPreviewMouseLeftButtonUp"
                         ScrollViewer.CanContentScroll="True"
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         VirtualizingPanel.IsVirtualizing="True"
-                        VirtualizingPanel.VirtualizationMode="Recycling" />
+                        VirtualizingPanel.VirtualizationMode="Recycling">
+                        <ListBox.ItemContainerStyle>
+                            <Style
+                                BasedOn="{StaticResource TransparentListBoxItemStyle}"
+                                TargetType="{x:Type ListBoxItem}">
+                                <!-- 项不可聚焦：点击项不夺走输入框键盘焦点，避免误触发失焦提交 -->
+                                <Setter Property="Focusable" Value="False" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                     <TextBlock
                         x:Name="EmptyResultTextBlock"
                         Margin="8,6"
