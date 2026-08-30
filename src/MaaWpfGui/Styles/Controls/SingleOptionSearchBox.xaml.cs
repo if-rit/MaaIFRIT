@@ -131,8 +131,7 @@ public partial class SingleOptionSearchBox : UserControl
         }
         else
         {
-            InputTextBox.Focus(); // E1：▶ 点击 = 聚焦进入输入态
-            EnterInputMode();
+            InputTextBox.Focus(); // E1：▶ 点击 = 聚焦进入输入态（GotKeyboardFocus 会触发 EnterInputMode）
         }
     }
 
