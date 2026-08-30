@@ -379,7 +379,7 @@ public partial class SingleOptionSearchBox : UserControl
 
     private void UpdateErrorVisual()
     {
-        var errorBrush = (Brush?)TryFindResource("SearchBoxErrorBrush");
+        var errorBrush = (Brush?)TryFindResource("DangerBrush");
         var primaryBrush = (Brush?)TryFindResource("PrimaryTextBrush");
 
         if (_hasError)
@@ -405,7 +405,7 @@ public partial class SingleOptionSearchBox : UserControl
     private void UpdateGlyph()
     {
         TogglePath.Data = _isInputMode
-            ? (Geometry)TryFindResource("SearchBoxUpGeometry")!
-            : (Geometry)TryFindResource("SearchBoxDownGeometry")!;
+            ? (Geometry)TryFindResource("UpGeometry")!
+            : (Geometry)TryFindResource("DownGeometry")!;
     }
 }

@@ -14,11 +14,6 @@
     d:DesignWidth="220"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <!-- 错误色（红），避免依赖外部 DangerBrush -->
-        <SolidColorBrush x:Key="SearchBoxErrorBrush" Color="#E64545" />
-        <!-- 下拉箭头（对齐 HandyControl ComboBox 的 DownGeometry/UpGeometry） -->
-        <Geometry x:Key="SearchBoxDownGeometry">M512 801.6896L5.12 282.0096l58.1632-59.5968L512 682.3936l448.7168-460.0832 58.1632 59.5968-506.88 519.7824z</Geometry>
-        <Geometry x:Key="SearchBoxUpGeometry">M50.000001,0 L100,51.262779 94.262627,57.141584 50.000001,11.767713 5.7373757,57.151686 0,51.27288 z</Geometry>
         <!-- 裸 ToggleButton：模板即纯 ContentPresenter，无默认边框/hover 视觉（避免圆角灰色线包裹） -->
         <Style x:Key="SearchBoxToggleButtonStyle" TargetType="{x:Type ToggleButton}">
             <Setter Property="Focusable" Value="False" />
@@ -87,7 +82,6 @@
                     Width="28"
                     HorizontalAlignment="Right"
                     Click="OnToggleButtonClick"
-                    Cursor="Hand"
                     Style="{StaticResource SearchBoxToggleButtonStyle}">
                     <Path
                         x:Name="TogglePath"
@@ -95,7 +89,7 @@
                         Margin="0,0,1,0"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center"
-                        Data="{StaticResource SearchBoxDownGeometry}"
+                        Data="{StaticResource DownGeometry}"
                         Fill="{Binding BorderBrush, ElementName=BoxBorder}"
                         Stretch="Uniform" />
                 </ToggleButton>
@@ -107,7 +101,7 @@
             x:Name="ErrorHintTextBlock"
             Grid.Row="1"
             Margin="8,2,0,0"
-            Foreground="{DynamicResource SearchBoxErrorBrush}"
+            Foreground="{DynamicResource DangerBrush}"
             Text="{Binding ErrorText, RelativeSource={RelativeSource AncestorType=UserControl}}"
             TextWrapping="Wrap"
             Visibility="Collapsed" />
